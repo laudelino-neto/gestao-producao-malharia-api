@@ -15,9 +15,9 @@ public class LancamentoDeProducao {
 	
 	private Produto produto;
 	
-	private Integer quantidade;
-	
 	private Tamanho tamanho;
+	
+	private Integer quantidade;	
 	
 	private LocalDateTime dataDeMovto;
 	
