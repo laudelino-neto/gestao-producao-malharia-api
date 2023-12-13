@@ -35,7 +35,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 	@Override
 	public Colaborador buscarPor(Integer id) {
 		Colaborador colaboradorEncontrado = repository.buscarPor(id);
-		Preconditions.checkNotNull(colaboradorEncontrado, "Não foi encontrada colaborador para o id informado");
+		Preconditions.checkNotNull(colaboradorEncontrado, "Não foi encontrado colaborador para o id informado");
 		Preconditions.checkArgument(colaboradorEncontrado.isAtivo(), "O colaborador está inativo.");
 		return colaboradorEncontrado;
 	}

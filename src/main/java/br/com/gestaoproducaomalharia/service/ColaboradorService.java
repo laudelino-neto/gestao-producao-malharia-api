@@ -25,8 +25,8 @@ public interface ColaboradorService {
 			Integer id);
 	
 	public Page<Colaborador> listarPor(	
-			@NotBlank(message = "O nome é obrigatório.") 
-			@Size(min = 3, message = "O nome deve ter no mínimo 3 caracteres.")
+			@NotBlank(message = "O nome completo é obrigatório.") 
+			@Size(min = 3, message = "O nome completo deve ter no mínimo 3 caracteres.")
 			String nomeCompleto, 
 			Pageable paginacao);
 	
