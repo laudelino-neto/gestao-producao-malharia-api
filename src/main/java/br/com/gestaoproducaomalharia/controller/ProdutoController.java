@@ -21,17 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Preconditions;
 
-import br.com.gestaoproducaomalharia.entity.Tamanho;
+import br.com.gestaoproducaomalharia.entity.Produto;
 import br.com.gestaoproducaomalharia.entity.enums.Status;
-import br.com.gestaoproducaomalharia.service.TamanhoService;
+import br.com.gestaoproducaomalharia.service.ProdutoService;
 import jakarta.transaction.Transactional;
 
 @RestController
-@RequestMapping("/tamanhos")
-public class TamanhoController {
+@RequestMapping("/produtos")
+public class ProdutoController {
 	
-	@Autowired @Qualifier("tamanhoServiceProxy")
-	private TamanhoService service;
+	@Autowired @Qualifier("produtoServiceProxy")
+	private ProdutoService service;
 	
 	@Autowired
 	private MapConverter converter;
@@ -39,26 +39,26 @@ public class TamanhoController {
 	@PostMapping
 	public ResponseEntity<?> inserir(
 			@RequestBody
-			Tamanho tamanho) {
-		Preconditions.checkArgument(!tamanho.isPersistido(), 
-				"O tamanho não deve possuir ID na inserção.");
-		Tamanho tamanhoSalvo = service.salvar(tamanho);
-		return ResponseEntity.created(URI.create("/tamanhos/id/" + tamanhoSalvo.getId())).build();
+			Produto produto) {
+		Preconditions.checkArgument(!produto.isPersistido(), 
+				"O produto não deve possuir ID na inserção.");
+		Produto produtoSalvo = service.salvar(produto);
+		return ResponseEntity.created(URI.create("/produtos/id/" + produtoSalvo.getId())).build();
 	}
 	
 	@PutMapping
 	public ResponseEntity<?> alterar(
 			@RequestBody 
-			Tamanho tamanho){
-		Preconditions.checkArgument(tamanho.isPersistido(), 
-				"O tamanho deve possuir id para a alteração.");
-		Tamanho tamanhoAlterado = service.salvar(tamanho);
-		return ResponseEntity.ok(converter.toJsonMap(tamanhoAlterado));
+			Produto produto){
+		Preconditions.checkArgument(produto.isPersistido(), 
+				"O produto deve possuir id para a alteração.");
+		Produto produtoAlterado = service.salvar(produto);
+		return ResponseEntity.ok(converter.toJsonMap(produtoAlterado));
 	}
 	@GetMapping("/id/{id}")
 	public ResponseEntity<?> buscarPor(@PathVariable("id") Integer id) {
-		Tamanho tamanhoEncontrado = service.buscarPor(id);
-		return ResponseEntity.ok(converter.toJsonMap(tamanhoEncontrado));
+		Produto produtoEncontrado = service.buscarPor(id);
+		return ResponseEntity.ok(converter.toJsonMap(produtoEncontrado));
 	}
 	
 	@Transactional
@@ -74,6 +74,8 @@ public class TamanhoController {
 	
 	@GetMapping
 	public ResponseEntity<?> listarPor(
+			@RequestParam("descricao")
+			String descricao,
 			@RequestParam("pagina")
 			Optional<Integer> pagina) {
 		Pageable paginacao = null;
@@ -83,8 +85,8 @@ public class TamanhoController {
 			paginacao = PageRequest.of(0, 15);
 		}
 		
-		Page<Tamanho> tamanhos = service.listarPor(paginacao);
-		return ResponseEntity.ok(converter.toJsonList(tamanhos));
+		Page<Produto> produtos = service.listarPor(descricao, paginacao);
+		return ResponseEntity.ok(converter.toJsonList(produtos));
 	}
-
+	
 }
