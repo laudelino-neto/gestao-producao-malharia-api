@@ -43,7 +43,7 @@ public class ColaboradorController {
 		Preconditions.checkArgument(!colaborador.isPersistido(), 
 				"O colaborador não deve possuir ID na inserção.");
 		Colaborador colaboradorSalvo = service.salvar(colaborador);
-		return ResponseEntity.created(URI.create("/colraboradores/id" + colaboradorSalvo.getId())).build();
+		return ResponseEntity.created(URI.create("/colaboradores/id/" + colaboradorSalvo.getId())).build();
 	}
 	
 	@PutMapping
