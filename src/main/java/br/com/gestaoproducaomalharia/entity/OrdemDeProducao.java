@@ -48,14 +48,22 @@ public class OrdemDeProducao implements Validavel{
 	@Column(name = "data_entrega")
 	private LocalDate dataDeEntrega;
 	
-	@Positive(message = "O total de itens deve ser maior que zero")
 	@NotNull(message = "O total de itens é obrigatório")
+	@Positive(message = "O total de itens deve ser maior que zero")
 	@Column(name = "total_itens")
 	private Integer totalDeItens;
+	
+	@Positive(message = "O total produzido deve ser maior que zero")
+	@Column(name = "total_produzido")
+	private Integer totalProduzido;
 	
 	@OneToMany(mappedBy = "ordem", fetch = FetchType.LAZY, 
 			cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<ItemDeProducao> itens;
+
+	@OneToMany(mappedBy = "ordem", fetch = FetchType.LAZY, 
+			cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<LancamentoDeProducao> lancamentos;
 	
 	@Enumerated(value = EnumType.STRING)
 	@NotNull(message = "O status do tamanho é obrigatório")

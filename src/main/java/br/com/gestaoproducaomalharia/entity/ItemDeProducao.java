@@ -42,7 +42,8 @@ public class ItemDeProducao {
 	@NotNull(message = "O tamanho do item é obrigatório")
 	private Tamanho tamanho;
 	
-	@Positive(message = "A quantidade do item é obrigatória")
+	@NotNull(message = "A quantidade do item é obrigatória")
+	@Positive(message = "A quantidade do item deve ser positiva")
 	@Column(name = "qtde")
 	private Integer quantidade;	
 	
