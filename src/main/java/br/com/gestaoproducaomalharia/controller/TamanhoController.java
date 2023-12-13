@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Preconditions;
 
-import br.com.gestaoproducaomalharia.entity.Fornecedor;
 import br.com.gestaoproducaomalharia.entity.Tamanho;
 import br.com.gestaoproducaomalharia.entity.enums.Status;
 import br.com.gestaoproducaomalharia.service.TamanhoService;
