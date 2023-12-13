@@ -1,5 +1,7 @@
 package br.com.gestaoproducaomalharia.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 import br.com.gestaoproducaomalharia.entity.Tamanho;
@@ -24,6 +26,9 @@ public interface TamanhoService {
 			@Valid
 			@NotNull(message = "O tamanho é obrigatório")
 			Tamanho tamanho);
+	
+	public Page<Tamanho> listarPor(
+			Pageable paginacao);
 	
 	public void atualizarStatusPor(
 			@NotNull(message = "O id é obrigatório.") 

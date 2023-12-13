@@ -1,6 +1,8 @@
 package br.com.gestaoproducaomalharia.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Preconditions;
@@ -56,6 +58,11 @@ public class TamanhoServiceImpl implements TamanhoService {
 		Preconditions.checkArgument(tamanhoEncontrado.getStatus() != status,
 				"O status já está salvo para o tamanho.");
 		this.repository.atualizarStatusPor(id, status);
+	}
+
+	@Override
+	public Page<Tamanho> listarPor(Pageable paginacao) {
+		return repository.listarPor(paginacao);
 	}
 
 }
