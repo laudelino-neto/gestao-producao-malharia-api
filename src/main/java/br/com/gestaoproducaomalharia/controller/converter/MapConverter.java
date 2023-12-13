@@ -1,4 +1,4 @@
-package br.com.gestaoproducaomalharia.controller;
+package br.com.gestaoproducaomalharia.controller.converter;
 
 import java.io.Serializable;
 import java.util.ArrayList;

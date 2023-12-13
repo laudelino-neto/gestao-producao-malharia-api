@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Preconditions;
 
+import br.com.gestaoproducaomalharia.controller.converter.MapConverter;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.enums.Status;
 import br.com.gestaoproducaomalharia.service.ColaboradorService;

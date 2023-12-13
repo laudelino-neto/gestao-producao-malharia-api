@@ -23,7 +23,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -37,7 +36,6 @@ public class OrdemDeProducao implements Validavel{
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
-	@ToString.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_fornecedor")
 	@NotNull(message = "O fornecedor é obrigatório")	
