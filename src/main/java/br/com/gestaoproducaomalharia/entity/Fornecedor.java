@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -41,19 +42,21 @@ public class Fornecedor implements Validavel{
 	private String email;
 	
 	@Enumerated(value = EnumType.STRING)
-	@NotNull(message = "O status do fornecedor não deve ser nulo")
+	@NotNull(message = "O status do fornecedor é obrigatório")
 	@Column(name = "status")
 	private Status status;
 	
 	public Fornecedor() {
 		this.status = Status.A;
 	}
-
+	
+	@Transient
 	@Override
 	public boolean isPersistido() {
 		return getId() != null && getId() > 0;
 	}
 
+	@Transient
 	@Override
 	public boolean isAtivo() {
 		return getStatus() == Status.A;

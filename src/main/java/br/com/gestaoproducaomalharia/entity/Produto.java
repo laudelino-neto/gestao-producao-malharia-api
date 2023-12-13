@@ -1,15 +1,57 @@
 package br.com.gestaoproducaomalharia.entity;
 
 import br.com.gestaoproducaomalharia.entity.enums.Status;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
-public class Produto {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Table(name = "produtos")
+@Entity(name = "Produto")
+public class Produto implements Validavel{
 
-	private Integer id;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
+	@EqualsAndHashCode.Include
+	private Integer id;	
 	
+	@Size(max = 200, message = "A descrição do produto não deve conter mais de 200 caracteres")
+	@NotBlank(message = "A descrição do produto é obrigatória")
+	@Column(name = "descricao")
 	private String descricao;
 	
+	@Enumerated(value = EnumType.STRING)
+	@NotNull(message = "O status do tamanho é obrigatório")
+	@Column(name = "status")
 	private Status status;
+	
+	public Produto() {
+		this.status = Status.A;
+	}
+	
+	@Transient
+	@Override
+	public boolean isPersistido() {
+		return getId() != null && getId() > 0;
+	}
+
+	@Transient
+	@Override
+	public boolean isAtivo() {
+		return getStatus() == Status.A;
+	}
 	
 }
