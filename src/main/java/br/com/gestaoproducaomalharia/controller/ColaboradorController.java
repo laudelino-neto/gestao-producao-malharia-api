@@ -24,6 +24,7 @@ import com.google.common.base.Preconditions;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.enums.Status;
 import br.com.gestaoproducaomalharia.service.ColaboradorService;
+import jakarta.transaction.Transactional;
 
 @RestController
 @RequestMapping("/colaboradores")
@@ -54,7 +55,13 @@ public class ColaboradorController {
 		Colaborador colaboradorAlterado = service.salvar(colaborador);
 		return ResponseEntity.ok(converter.toJsonMap(colaboradorAlterado));
 	}
+	@GetMapping("/id/{id}")
+	public ResponseEntity<?> buscarPor(@PathVariable("id") Integer id) {
+		Colaborador colaboradorEncontrado = service.buscarPor(id);
+		return ResponseEntity.ok(converter.toJsonMap(colaboradorEncontrado));
+	}
 	
+	@Transactional
 	@PatchMapping("/id/{id}/status/{status}")
 	public ResponseEntity<?> atualizarStatusPor(
 			@PathVariable("id")
