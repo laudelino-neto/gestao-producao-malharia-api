@@ -28,7 +28,7 @@ public class FornecedorServiceProxy implements FornecedorService {
 
 	@Override
 	public Page<Fornecedor> listarPor(String nomeFantasia, Pageable paginacao) {
-		return service.listarPor(nomeFantasia, paginacao);
+		return service.listarPor("%" + nomeFantasia + "%", paginacao);
 	}
 
 	@Override
