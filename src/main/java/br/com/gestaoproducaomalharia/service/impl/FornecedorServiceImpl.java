@@ -43,7 +43,6 @@ public class FornecedorServiceImpl implements FornecedorService {
 	@Override
 	public Page<Fornecedor> listarPor(String nomeFantasia, Pageable paginacao) {
 		return repository.listarPor("%" + nomeFantasia + "%", paginacao);
-
 	}
 
 	@Override

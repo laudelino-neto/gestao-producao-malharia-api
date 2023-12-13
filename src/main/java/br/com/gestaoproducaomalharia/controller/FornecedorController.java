@@ -89,5 +89,4 @@ public class FornecedorController {
 		return ResponseEntity.ok(converter.toJsonList(fornecedores));
 	}
 
-
 }
