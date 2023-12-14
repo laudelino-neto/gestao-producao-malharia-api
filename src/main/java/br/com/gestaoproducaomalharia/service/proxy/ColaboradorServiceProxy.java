@@ -11,7 +11,7 @@ import br.com.gestaoproducaomalharia.entity.enums.Status;
 import br.com.gestaoproducaomalharia.service.ColaboradorService;
 
 @Service
-public class ColaboradorServiceProxy  implements ColaboradorService {
+public class ColaboradorServiceProxy implements ColaboradorService {
 	
 	@Autowired @Qualifier("colaboradorServiceImpl")
 	private ColaboradorService service;

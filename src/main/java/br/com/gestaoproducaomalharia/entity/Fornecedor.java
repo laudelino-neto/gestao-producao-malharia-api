@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "fornecedores")
 @Entity(name = "Fornecedor")
-public class Fornecedor implements Validavel{
+public class Fornecedor implements Validavel {
 	
 	@Id
 	@Column(name = "id")

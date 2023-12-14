@@ -56,6 +56,7 @@ public class FornecedorController {
 		Fornecedor fornecedorAlterado = service.salvar(fornecedor);
 		return ResponseEntity.ok(converter.toJsonMap(fornecedorAlterado));
 	}
+	
 	@GetMapping("/id/{id}")
 	public ResponseEntity<?> buscarPor(@PathVariable("id") Integer id) {
 		Fornecedor fornecedorEncontrado = service.buscarPor(id);
