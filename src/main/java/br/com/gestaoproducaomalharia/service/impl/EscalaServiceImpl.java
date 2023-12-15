@@ -16,6 +16,7 @@ import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.Escala;
 import br.com.gestaoproducaomalharia.exception.RegistroNaoEncontradoException;
+import br.com.gestaoproducaomalharia.repository.AcertosDeEscalasRepository;
 import br.com.gestaoproducaomalharia.repository.ColaboradoresRepository;
 import br.com.gestaoproducaomalharia.repository.EscalasRepository;
 import br.com.gestaoproducaomalharia.service.EscalaService;
@@ -28,10 +29,51 @@ public class EscalaServiceImpl implements EscalaService{
 	
 	@Autowired
 	private ColaboradoresRepository colaboradoresRepository;
+	
+	@Autowired
+	private AcertosDeEscalasRepository repository;
 
 	@Override
 	public AcertoDeEscala salvar(AcertoDeEscala acerto) {
-		return null;
+	    
+		LocalDate dataAcerto = acerto.getData();
+	    
+	    Optional<Escala> escalaExistente = escalasRepository.buscarPor(
+	    		acerto.getColaborador(), dataAcerto);
+	    
+	    Preconditions.checkNotNull(escalaExistente.isPresent(), 
+	    		"Não existe escala realizada para a data do acerto");
+	    
+	    LocalDate dataAtual = LocalDate.now();
+			Preconditions.checkNotNull(dataAcerto.isAfter(dataAtual), 
+					"A data do acerto não pode ser posterior à data atual");
+
+	    AcertoDeEscala acertoExistente = repository.buscarPor(
+	    		acerto.getColaborador().getId(), dataAcerto);
+	    
+	    if (!acertoExistente.isPersistido()) {
+	        return repository.save(acerto);
+	    } else {
+	    	acertoExistente.setTempo(acerto.getTempo());
+	    	acertoExistente.setTipo(acerto.getTipo());
+	    	return repository.saveAndFlush(acerto);
+	    }
+	    
+	}
+
+	@Override
+	public AcertoDeEscala excluirPor(Integer id) {
+		AcertoDeEscala acertoParaExclusao = buscarPor(id);
+		this.repository.deleteById(acertoParaExclusao.getId());
+		return acertoParaExclusao;
+	}
+	
+	@Override
+	public AcertoDeEscala buscarPor(Integer id) {
+		AcertoDeEscala acertoEncontrado = repository.buscarPor(id);
+		Preconditions.checkNotNull(acertoEncontrado, 
+				"Não foi encontrado acerto para o id informado");
+		return acertoEncontrado;
 	}
 
 	@Override

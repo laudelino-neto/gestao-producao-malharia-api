@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
@@ -23,7 +24,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "acertos_escalas")
 @Entity(name = "AcertoDeEscala")
-public class AcertoDeEscala {
+public class AcertoDeEscala implements Validavel {
 
 	@Id
 	@Column(name = "id")
@@ -49,5 +50,11 @@ public class AcertoDeEscala {
 	@NotNull(message = "O tipo é obrigatório")
 	@Column(name = "tipo")
 	private TipoDeAcerto tipo;
+	
+	@Transient
+	@Override
+	public boolean isPersistido() {
+		return getId() != null && getId() > 0;
+	}
 	
 }
