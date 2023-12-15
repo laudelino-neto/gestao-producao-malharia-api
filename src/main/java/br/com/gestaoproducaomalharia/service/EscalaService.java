@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.Escala;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -18,6 +19,7 @@ import jakarta.validation.constraints.Positive;
 public interface EscalaService {
 
 	public AcertoDeEscala salvar(
+			@Valid
 			@NotNull(message = "O acerto é obrigatório.") 
 			AcertoDeEscala acerto);
 	

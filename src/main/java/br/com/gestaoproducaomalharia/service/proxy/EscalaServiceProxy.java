@@ -49,7 +49,7 @@ public class EscalaServiceProxy implements EscalaService {
 	@Override
 	public List<Escala> gerarPor(Colaborador colaborador, LocalDate dataInicial, 
 			LocalDate dataFinal, LocalTime entrada, LocalTime saida) {		
-		return null;
+		return service.gerarPor(colaborador, dataInicial, dataFinal, entrada, saida);
 	}
 
 }
