@@ -18,11 +18,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "escalas")
 @Entity(name = "Escala")
+@ToString
 public class Escala {
 	
 	@Id
@@ -51,6 +53,19 @@ public class Escala {
 	@Enumerated(value = EnumType.STRING)
 	@NotNull(message = "O indicador 'Realizado' é obrigatório")
 	@Column(name = "fl_realizada")
-	private Confirmacao isRealizada;
+	private Confirmacao realizada;
+	
+	public Escala() {
+		this.realizada = Confirmacao.S;
+	}
+
+	public Escala(Colaborador colaborador, LocalDate data, 
+			LocalTime entrada, LocalTime saida) {
+		this();
+		this.colaborador = colaborador;
+		this.data = data;
+		this.entrada = entrada;
+		this.saida = saida;
+	}	
 	
 }
