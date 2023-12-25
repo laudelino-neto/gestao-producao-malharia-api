@@ -15,15 +15,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table(name = "escalas")
 @Entity(name = "Escala")
-public class Escala {
+@ToString
+public class Escala implements Validavel{
 	
 	@Id
 	@Column(name = "id")
@@ -51,6 +54,25 @@ public class Escala {
 	@Enumerated(value = EnumType.STRING)
 	@NotNull(message = "O indicador 'Realizado' é obrigatório")
 	@Column(name = "fl_realizada")
-	private Confirmacao isRealizada;
+	private Confirmacao realizada;
+	
+	public Escala() {
+		this.realizada = Confirmacao.S;
+	}
+
+	public Escala(Colaborador colaborador, LocalDate data, 
+			LocalTime entrada, LocalTime saida) {
+		this();
+		this.colaborador = colaborador;
+		this.data = data;
+		this.entrada = entrada;
+		this.saida = saida;
+	}
+	
+	@Transient
+	@Override
+	public boolean isPersistido() {
+		return getId() != null && getId() > 0;
+	}
 	
 }
