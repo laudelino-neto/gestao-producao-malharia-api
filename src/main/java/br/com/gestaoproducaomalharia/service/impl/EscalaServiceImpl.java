@@ -15,6 +15,7 @@ import com.google.common.base.Preconditions;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.Escala;
+import br.com.gestaoproducaomalharia.entity.enums.Confirmacao;
 import br.com.gestaoproducaomalharia.exception.RegistroNaoEncontradoException;
 import br.com.gestaoproducaomalharia.repository.AcertosDeEscalasRepository;
 import br.com.gestaoproducaomalharia.repository.ColaboradoresRepository;
@@ -31,7 +32,7 @@ public class EscalaServiceImpl implements EscalaService{
 	private ColaboradoresRepository colaboradoresRepository;
 	
 	@Autowired
-	private AcertosDeEscalasRepository repository;
+	private AcertosDeEscalasRepository acertosRepository;
 
 	@Override
 	public AcertoDeEscala salvar(AcertoDeEscala acerto) {
@@ -48,29 +49,29 @@ public class EscalaServiceImpl implements EscalaService{
 			Preconditions.checkNotNull(dataAcerto.isAfter(dataAtual), 
 					"A data do acerto não pode ser posterior à data atual");
 
-	    AcertoDeEscala acertoExistente = repository.buscarPor(
+	    AcertoDeEscala acertoExistente = acertosRepository.buscarPor(
 	    		acerto.getColaborador().getId(), dataAcerto);
 	    
 	    if (!acertoExistente.isPersistido()) {
-	        return repository.save(acerto);
+	        return acertosRepository.save(acerto);
 	    } else {
 	    	acertoExistente.setTempo(acerto.getTempo());
 	    	acertoExistente.setTipo(acerto.getTipo());
-	    	return repository.saveAndFlush(acerto);
+	    	return acertosRepository.saveAndFlush(acerto);
 	    }
 	    
 	}
 
 	@Override
-	public AcertoDeEscala excluirPor(Integer id) {
-		AcertoDeEscala acertoParaExclusao = buscarPor(id);
-		this.repository.deleteById(acertoParaExclusao.getId());
+	public AcertoDeEscala excluirAcertoPor(Integer id) {
+		AcertoDeEscala acertoParaExclusao = buscarAcertoPor(id);
+		this.acertosRepository.deleteById(acertoParaExclusao.getId());
 		return acertoParaExclusao;
 	}
 	
 	@Override
-	public AcertoDeEscala buscarPor(Integer id) {
-		AcertoDeEscala acertoEncontrado = repository.buscarPor(id);
+	public AcertoDeEscala buscarAcertoPor(Integer id) {
+		AcertoDeEscala acertoEncontrado = acertosRepository.buscarPor(id);
 		Preconditions.checkNotNull(acertoEncontrado, 
 				"Não foi encontrado acerto para o id informado");
 		return acertoEncontrado;
@@ -78,12 +79,43 @@ public class EscalaServiceImpl implements EscalaService{
 
 	@Override
 	public Escala salvar(Escala escala) {
-		return null;
+		
+		LocalDate dataDaEscala = escala.getData();
+		
+		Optional<Escala> resultadoDaBusca = escalasRepository.buscarPor(
+				escala.getColaborador(), dataDaEscala);
+		
+		if (resultadoDaBusca.isPresent()) {
+			Escala outraEscala = resultadoDaBusca.get();
+			Preconditions.checkArgument(outraEscala.equals(escala), 
+					"A escala possui a mesma data da escala com o id '" + outraEscala.getId() + "'");
+		}
+		
+		this.escalasRepository.save(escala);
+		
+		return escalasRepository.buscarPor(escala.getId()).get();				
+		
 	}
 
 	@Override
-	public Escala remover(Escala escala) {
-		return null;
+	public Escala excluirPor(Integer id) {
+		Escala escalaEncontrada = buscarPor(id);
+		this.escalasRepository.delete(escalaEncontrada);
+		return escalaEncontrada;
+	}
+	
+	@Override
+	public Escala buscarPor(Integer id) {
+		Optional<Escala> resultadoEncontrado = escalasRepository.buscarPor(id);
+		return resultadoEncontrado.orElseThrow(() -> 
+				new RegistroNaoEncontradoException("Não existe escala vinculada ao id '" + id + "'"));
+	}
+	
+	@Override
+	public void atualizarPor(Integer id, Confirmacao realizada) {
+		Escala escalaEncontrada = buscarPor(id);
+		escalaEncontrada.setRealizada(realizada);
+		this.salvar(escalaEncontrada);
 	}
 
 	@Override
@@ -113,7 +145,7 @@ public class EscalaServiceImpl implements EscalaService{
 		if (resultadoDaBusca.isPresent()) {
 			escalaInicial = resultadoDaBusca.get();
 		}else {
-			escalaInicial = new Escala(colaborador, dataInicial, entrada, saida);
+			escalaInicial = new Escala(colaboradorSalvo, dataInicial, entrada, saida);
 		}
 		
 		this.escalasRepository.save(escalaInicial);
@@ -130,7 +162,7 @@ public class EscalaServiceImpl implements EscalaService{
 				escala.setEntrada(entrada);
 				escala.setSaida(saida);
 			}else {				
-				escala = new Escala(colaborador, dataDaEscala, entrada, saida);
+				escala = new Escala(colaboradorSalvo, dataDaEscala, entrada, saida);
 			}
 			this.escalasRepository.save(escala);
 			escalas.add(escala);

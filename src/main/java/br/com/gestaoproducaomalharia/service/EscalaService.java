@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.Escala;
+import br.com.gestaoproducaomalharia.entity.enums.Confirmacao;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
@@ -20,22 +21,41 @@ public interface EscalaService {
 
 	public AcertoDeEscala salvar(
 			@Valid
-			@NotNull(message = "O acerto é obrigatório.") 
+			@NotNull(message = "O acerto é obrigatório") 
 			AcertoDeEscala acerto);
 	
-	public AcertoDeEscala excluirPor(
-			@NotNull(message = "O id para a exclusão é obrigatório.") 
-			@Positive(message = "O id para a exclusão deve ser positivo.")
+	public AcertoDeEscala excluirAcertoPor(
+			@NotNull(message = "O id para a exclusão é obrigatório") 
+			@Positive(message = "O id para a exclusão deve ser positivo")
 			Integer id);
 	
-	public AcertoDeEscala buscarPor(
-			@NotNull(message = "O id é obrigatório.") 
-			@Positive(message = "O id deve ser positivo.")
+	public AcertoDeEscala buscarAcertoPor(
+			@NotNull(message = "O id é obrigatório") 
+			@Positive(message = "O id deve ser positivo")
 			Integer id);
 	
-	public Escala salvar(Escala escala);
+	public Escala salvar(
+			@Valid
+			@NotNull(message = "A escala é obrigatória")
+			Escala escala);
 	
-	public Escala remover(Escala escala);
+	public Escala excluirPor(
+			@NotNull(message = "O id é obrigatório") 
+			@Positive(message = "O id deve ser positivo")
+			Integer id);
+	
+	public Escala buscarPor(
+			@NotNull(message = "O id é obrigatório") 
+			@Positive(message = "O id deve ser positivo")
+			Integer id);
+	
+	
+	public void atualizarPor(
+			@NotNull(message = "O id é obrigatório") 
+			@Positive(message = "O id deve ser positivo")
+			Integer id,
+			@NotNull(message = "O indicados 'realizada' é obrigatório")
+			Confirmacao realizada);
 	
 	public List<Escala> gerarPor(
 			@NotNull(message = "O colaborador é obrigatório")
@@ -50,4 +70,6 @@ public interface EscalaService {
 			LocalTime entrada,
 			@NotNull(message = "A saida é obrigatória")
 			LocalTime saida);
+	
+	
 }

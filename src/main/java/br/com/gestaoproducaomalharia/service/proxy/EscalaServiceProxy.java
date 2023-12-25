@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.Escala;
+import br.com.gestaoproducaomalharia.entity.enums.Confirmacao;
 import br.com.gestaoproducaomalharia.service.EscalaService;
 
 @Service
@@ -25,25 +26,33 @@ public class EscalaServiceProxy implements EscalaService {
 	}
 
 	@Override
-	public AcertoDeEscala excluirPor(Integer id) {
+	public AcertoDeEscala excluirAcertoPor(Integer id) {
+		return service.excluirAcertoPor(id);
+	}
+
+	@Override
+	public AcertoDeEscala buscarAcertoPor(Integer id) {
+		return service.buscarAcertoPor(id);
+	}
+
+	@Override
+	public Escala salvar(Escala escala) {	
+		return service.salvar(escala);
+	}
+
+	@Override
+	public Escala excluirPor(Integer id) {
 		return service.excluirPor(id);
 	}
-
+	
 	@Override
-	public AcertoDeEscala buscarPor(Integer id) {
+	public Escala buscarPor(Integer id) {
 		return service.buscarPor(id);
 	}
-
+	
 	@Override
-	public Escala salvar(Escala escala) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Escala remover(Escala escala) {
-		// TODO Auto-generated method stub
-		return null;
+	public void atualizarPor(Integer id, Confirmacao realizada) {
+		this.atualizarPor(id, realizada);
 	}
 
 	@Override

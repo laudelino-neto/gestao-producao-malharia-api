@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,7 +26,7 @@ import lombok.ToString;
 @Table(name = "escalas")
 @Entity(name = "Escala")
 @ToString
-public class Escala {
+public class Escala implements Validavel{
 	
 	@Id
 	@Column(name = "id")
@@ -66,6 +67,12 @@ public class Escala {
 		this.data = data;
 		this.entrada = entrada;
 		this.saida = saida;
-	}	
+	}
+	
+	@Transient
+	@Override
+	public boolean isPersistido() {
+		return getId() != null && getId() > 0;
+	}
 	
 }

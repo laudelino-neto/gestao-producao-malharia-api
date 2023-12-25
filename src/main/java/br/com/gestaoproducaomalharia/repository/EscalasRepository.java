@@ -16,8 +16,16 @@ public interface EscalasRepository extends JpaRepository<Escala, Integer>{
 	@Query(value = 
 			"SELECT e "
 			+ "FROM Escala e "
+			+ "JOIN FETCH e.colaborador c "
 			+ "WHERE e.colaborador = :colaborador "
 			+ "AND e.data = :data")
 	public Optional<Escala> buscarPor(Colaborador colaborador, LocalDate data);
+	
+	@Query(value = 
+			"SELECT e "
+			+ "FROM Escala e "
+			+ "JOIN FETCH e.colaborador c "
+			+ "WHERE e.id = :id")
+	public Optional<Escala> buscarPor(Integer id);
 	
 }
