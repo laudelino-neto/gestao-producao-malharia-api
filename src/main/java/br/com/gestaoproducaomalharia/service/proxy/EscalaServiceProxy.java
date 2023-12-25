@@ -52,13 +52,18 @@ public class EscalaServiceProxy implements EscalaService {
 	
 	@Override
 	public void atualizarPor(Integer id, Confirmacao realizada) {
-		this.atualizarPor(id, realizada);
+		this.service.atualizarPor(id, realizada);
 	}
 
 	@Override
 	public List<Escala> gerarPor(Colaborador colaborador, LocalDate dataInicial, 
 			LocalDate dataFinal, LocalTime entrada, LocalTime saida) {		
 		return service.gerarPor(colaborador, dataInicial, dataFinal, entrada, saida);
+	}
+	
+	@Override
+	public List<Escala> listarPor(Integer idDoColaborador, Integer ano, Integer mes){
+		return service.listarPor(idDoColaborador, ano, mes);
 	}
 
 }

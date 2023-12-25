@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.base.Preconditions;
@@ -42,7 +43,9 @@ public class EscalaController {
 	
 	@Transactional
 	@PostMapping
-	public ResponseEntity<?> inserir(Escala novaEscala){
+	public ResponseEntity<?> inserir(
+			@RequestBody
+			Escala novaEscala){
 		Preconditions.checkArgument(!novaEscala.isPersistido(), 
 				"A escala não deve possuir id informado");
 		Escala escalaSalva = service.salvar(novaEscala);
@@ -51,7 +54,9 @@ public class EscalaController {
 	
 	@Transactional
 	@PutMapping
-	public ResponseEntity<?> alterar(Escala escalaSalva){
+	public ResponseEntity<?> alterar(
+			@RequestBody
+			Escala escalaSalva){
 		Preconditions.checkArgument(escalaSalva.isPersistido(), 
 				"O id da escala é obrigatório");
 		Escala escalaAtualizada = service.salvar(escalaSalva);
@@ -75,18 +80,30 @@ public class EscalaController {
 		return ResponseEntity.ok(converter.toJsonMap(escalaExcluida));		
 	}
 	
-	@PostMapping("/acerto")
+	@PostMapping("/acertos")
 	public ResponseEntity<?> inserir(
 			@RequestBody
 			AcertoDeEscala acerto) {
 		Preconditions.checkArgument(!acerto.isPersistido(), 
-				"O acerto não deve possuir ID na inserção.");
+				"O acerto não deve possuir id na inserção");
 		AcertoDeEscala acertoSalvo = service.salvar(acerto);
-		return ResponseEntity.created(URI.create("/acertos/id/" + acertoSalvo.getId())).build();
+		return ResponseEntity.created(URI.create("/escalas/acertos/id/" + acertoSalvo.getId())).build();
 	}	
 	
-	@GetMapping("/acerto/id/{id}")
-	public ResponseEntity<?> buscarAcertoPor(@PathVariable("id") Integer id) {
+	@PutMapping("/acertos")
+	public ResponseEntity<?> alterar(
+			@RequestBody
+			AcertoDeEscala acerto){
+		Preconditions.checkArgument(acerto.isPersistido(), 
+				"O id do acerto é obrigatório ");
+		AcertoDeEscala acertoAtualizado = service.salvar(acerto);
+		return ResponseEntity.ok(converter.toJsonMap(acertoAtualizado));
+	}
+	
+	@GetMapping("/acertos/id/{id}")
+	public ResponseEntity<?> buscarAcertoPor(
+			@PathVariable("id") 
+			Integer id) {
 		AcertoDeEscala acertoEncontrado = service.buscarAcertoPor(id);
 		return ResponseEntity.ok(converter.toJsonMap(acertoEncontrado));
 	}
@@ -106,7 +123,7 @@ public class EscalaController {
 			@PathVariable("id")
 			Integer id){
 		this.service.atualizarPor(id, Confirmacao.S);
-		return ResponseEntity.created(URI.create("/acertos/id/" + id)).build();
+		return ResponseEntity.ok().build();
 	}
 	
 	@Transactional
@@ -115,7 +132,7 @@ public class EscalaController {
 			@PathVariable("id")
 			Integer id){
 		this.service.atualizarPor(id, Confirmacao.N);
-		return ResponseEntity.created(URI.create("/acertos/id/" + id)).build();
+		return ResponseEntity.ok().build();
 	}
 	
 	@Transactional
@@ -130,6 +147,18 @@ public class EscalaController {
 		
 		return ResponseEntity.ok(escalaConverter.toMap(escalasGeradas));
 		
+	}
+	
+	@GetMapping("/colaborador/{id-colaborador}")
+	public ResponseEntity<?> listarPor(
+			@PathVariable("id-colaborador")
+			Integer idDoColaborador,
+			@RequestParam("ano")
+			Integer ano,
+			@RequestParam("mes")
+			Integer mes){
+		List<Escala> escalas = service.listarPor(idDoColaborador, ano, mes);
+		return ResponseEntity.ok(escalaConverter.toMap(escalas));
 	}
 	
 }

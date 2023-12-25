@@ -12,6 +12,8 @@ import br.com.gestaoproducaomalharia.entity.Escala;
 import br.com.gestaoproducaomalharia.entity.enums.Confirmacao;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -70,6 +72,18 @@ public interface EscalaService {
 			LocalTime entrada,
 			@NotNull(message = "A saida é obrigatória")
 			LocalTime saida);
+	
+	public List<Escala> listarPor(
+			@NotNull(message = "O colaborador é obrigatório")
+			@Positive(message = "O id do colaborador deve ser positivo")
+			Integer idDoColaborador,
+			@NotNull(message = "O ano é obrigatório") 
+			@Positive(message = "O ano deve ser positivo")
+			Integer ano,
+			@NotNull(message = "O mês das escalas é obrigatório")			
+			@Min(value = 1, message = "O mês deve ser maior que 1")
+			@Max(value = 12, message = "O mês deve ser menor 12")
+			Integer mes);
 	
 	
 }

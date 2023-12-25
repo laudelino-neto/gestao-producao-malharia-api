@@ -37,22 +37,26 @@ public class EscalaServiceImpl implements EscalaService{
 	@Override
 	public AcertoDeEscala salvar(AcertoDeEscala acerto) {
 	    
-		LocalDate dataAcerto = acerto.getData();
+		LocalDate dia = acerto.getDia();
 	    
 	    Optional<Escala> escalaExistente = escalasRepository.buscarPor(
-	    		acerto.getColaborador(), dataAcerto);
+	    		acerto.getColaborador(), dia);
 	    
-	    Preconditions.checkNotNull(escalaExistente.isPresent(), 
-	    		"Não existe escala realizada para a data do acerto");
+	    Preconditions.checkArgument(escalaExistente.isPresent(), 
+	    		"Não existe escala realizada para a data do acerto");	    	   
 	    
-	    LocalDate dataAtual = LocalDate.now();
-			Preconditions.checkNotNull(dataAcerto.isAfter(dataAtual), 
+		Preconditions.checkArgument(acerto.isDiaPresenteOuFuturo(), 
 					"A data do acerto não pode ser posterior à data atual");
-
+		
+		if (acerto.isPorFalta()) {		
+			Preconditions.checkArgument(acerto.getTempo() == null, 
+					"O acerto por falta não deve possuir tempo informado");
+		}
+		
 	    AcertoDeEscala acertoExistente = acertosRepository.buscarPor(
-	    		acerto.getColaborador().getId(), dataAcerto);
+	    		acerto.getColaborador().getId(), dia);
 	    
-	    if (!acertoExistente.isPersistido()) {
+	    if (acertoExistente == null) {
 	        return acertosRepository.save(acerto);
 	    } else {
 	    	acertoExistente.setTempo(acerto.getTempo());
@@ -117,6 +121,16 @@ public class EscalaServiceImpl implements EscalaService{
 		escalaEncontrada.setRealizada(realizada);
 		this.salvar(escalaEncontrada);
 	}
+	
+	private Colaborador buscarColaboradorPor(Integer id) {
+
+		Colaborador colaboradorSalvo = colaboradoresRepository.buscarPor(id);
+
+		return Optional.ofNullable(colaboradorSalvo).orElseThrow(
+				() -> new RegistroNaoEncontradoException(
+						"Não foi encontrado colaborador com o id '" + id + "'"));
+
+	}
 
 	@Override
 	public List<Escala> gerarPor(Colaborador colaborador,
@@ -129,10 +143,7 @@ public class EscalaServiceImpl implements EscalaService{
 		Preconditions.checkArgument(entrada.isBefore(saida), 
 				"A hora de entrada não pode ser posterior a hora de saída");
 		
-		Colaborador colaboradorSalvo = colaboradoresRepository.buscarPor(colaborador.getId());
-		
-		Optional.ofNullable(colaboradorSalvo).orElseThrow(
-				() -> new RegistroNaoEncontradoException("Não foi encontrado colaborador com o id informado"));
+		Colaborador colaboradorSalvo = buscarColaboradorPor(colaborador.getId());
 		
 		long dias = ChronoUnit.DAYS.between(dataInicial, dataFinal);
 		
@@ -170,6 +181,12 @@ public class EscalaServiceImpl implements EscalaService{
 
 		return escalas;
 		
+	}
+	
+	@Override
+	public List<Escala> listarPor(Integer idDoColaborador, Integer ano, Integer mes){
+		Colaborador colaboradorSalvo = buscarColaboradorPor(idDoColaborador);
+		return escalasRepository.listarPor(colaboradorSalvo, ano, mes);		
 	}
 
 }

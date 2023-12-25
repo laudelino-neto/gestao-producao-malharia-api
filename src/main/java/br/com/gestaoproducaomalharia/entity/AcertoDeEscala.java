@@ -16,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -32,18 +31,18 @@ public class AcertoDeEscala implements Validavel {
 	@EqualsAndHashCode.Include
 	private Integer id;
 	
-	@NotNull(message = "A data é obrigatória")
+	@NotNull(message = "O dia é obrigatório")
+	@Column(name = "dia")
+	private LocalDate dia;
+	
 	@Column(name = "data_acerto")
-	private LocalDate data;
+	private LocalDate dataDoAcerto;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_colaborador")
 	@NotNull(message = "O colaborador é obrigatório")
 	private Colaborador colaborador;
-	
-	@Positive(message = "O tempo deve ser em minutos e deve ser maior que zero")
-	@NotNull(message = "O tempo é obrigatório")
-	@Column(name = "tempo")
+		
 	private Integer tempo;
 	
 	@Enumerated(value = EnumType.STRING)
@@ -51,10 +50,25 @@ public class AcertoDeEscala implements Validavel {
 	@Column(name = "tipo")
 	private TipoDeAcerto tipo;
 	
+	public AcertoDeEscala() {
+		this.dataDoAcerto = LocalDate.now();
+	}
+	
 	@Transient
 	@Override
 	public boolean isPersistido() {
 		return getId() != null && getId() > 0;
+	}
+	
+	@Transient
+	public boolean isPorFalta() {
+		return getTipo() == TipoDeAcerto.FALTA;
+	}
+	
+	@Transient
+	public boolean isDiaPresenteOuFuturo() {
+		LocalDate hoje = LocalDate.now();
+		return getDia().equals(hoje) || getDia().isAfter(hoje);
 	}
 	
 }

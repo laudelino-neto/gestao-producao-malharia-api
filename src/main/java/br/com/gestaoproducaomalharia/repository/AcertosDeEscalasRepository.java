@@ -11,13 +11,19 @@ import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 @Repository
 public interface AcertosDeEscalasRepository extends JpaRepository<AcertoDeEscala, Integer> {
 	
-	@Query(value = "SELECT ae "
+	@Query(value = 
+			"SELECT ae "
 			+ "FROM AcertoDeEscala ae "
+			+ "JOIN FETCH ae.colaborador c "
 			+ "WHERE ae.colaborador.id = :idDoColaborador "
-			+ "AND ae.data = :data")
-	public AcertoDeEscala buscarPor(int idDoColaborador, LocalDate data);
+			+ "AND ae.dia = :dia")
+	public AcertoDeEscala buscarPor(int idDoColaborador, LocalDate dia);
 	
-	@Query(value = "SELECT ae FROM AcertoDeEscala ae WHERE ae.id = :id")
+	@Query(value = 
+			"SELECT ae "
+			+ "FROM AcertoDeEscala ae "
+			+ "JOIN FETCH ae.colaborador c "
+			+ "WHERE ae.id = :id")
 	public AcertoDeEscala buscarPor(Integer id);
 
 }
