@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 
+import br.com.gestaoproducaomalharia.dto.RelatorioDeEscalas;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.Escala;
@@ -72,6 +73,18 @@ public interface EscalaService {
 			LocalTime entrada,
 			@NotNull(message = "A saida é obrigatória")
 			LocalTime saida);
+	
+	public RelatorioDeEscalas gerarPor(
+			@NotNull(message = "O colaborador é obrigatório")
+			@Positive(message = "O id do colaborador deve ser positivo")
+			Integer idDoColaborador,
+			@NotNull(message = "O ano é obrigatório") 
+			@Positive(message = "O ano deve ser positivo")
+			Integer ano,
+			@NotNull(message = "O mês das escalas é obrigatório")			
+			@Min(value = 1, message = "O mês deve ser maior que 1")
+			@Max(value = 12, message = "O mês deve ser menor 12")
+			Integer mes);
 	
 	public List<Escala> listarPor(
 			@NotNull(message = "O colaborador é obrigatório")

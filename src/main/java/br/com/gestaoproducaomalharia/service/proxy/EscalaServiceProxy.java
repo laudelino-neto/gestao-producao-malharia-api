@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import br.com.gestaoproducaomalharia.dto.RelatorioDeEscalas;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.Escala;
@@ -64,6 +65,11 @@ public class EscalaServiceProxy implements EscalaService {
 	@Override
 	public List<Escala> listarPor(Integer idDoColaborador, Integer ano, Integer mes){
 		return service.listarPor(idDoColaborador, ano, mes);
+	}
+	
+	@Override
+	public RelatorioDeEscalas gerarPor(Integer idDoColaborador, Integer ano, Integer mes){
+		return service.gerarPor(idDoColaborador, ano, mes);
 	}
 
 }

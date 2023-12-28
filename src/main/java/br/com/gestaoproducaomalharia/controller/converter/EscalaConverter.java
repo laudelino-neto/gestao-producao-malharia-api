@@ -7,12 +7,35 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import br.com.gestaoproducaomalharia.dto.RelatorioDeEscalas;
 import br.com.gestaoproducaomalharia.entity.Escala;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @Component
 public class EscalaConverter {
+	
+	public Map<String, Object> toMap(RelatorioDeEscalas relatorio){			
+
+		Map<String, Object> relatorioMap = new HashMap<>();
+
+		final int PRIMEIRO_COLABORADOR = 0;
+		relatorioMap.put("colaborador", relatorio.getEscalas()
+				.get(PRIMEIRO_COLABORADOR).getColaborador());
+
+		relatorioMap.put("ano", relatorio.getAno());
+
+		relatorioMap.put("mes", relatorio.getMes());
+
+		List<Map<String, Object>> escalasConvertidasMap = toListMap(relatorio.getEscalas());
+
+		relatorioMap.put("escalas", escalasConvertidasMap);
+
+		relatorioMap.put("resumo", relatorio.getResumo());
+
+		return relatorioMap;
+
+	}
 
 	public Map<String, Object> toMap(
 			@NotNull(message = "A listagem de escalas é obrigatória")
@@ -28,23 +51,40 @@ public class EscalaConverter {
 			final int PRIMEIRO_COLABORADOR = 0;
 			escalasDoColaboradorMap.put("colaborador", escalasGeradas
 					.get(PRIMEIRO_COLABORADOR).getColaborador());
-			
-			List<Map<String, Object>> escalasConvertidasMap = new ArrayList<>();
-			escalasGeradas.forEach(e -> {
-				Map<String, Object> escalaMap = new HashMap<>();
-				escalaMap.put("data", e.getData());
-				escalaMap.put("entrada", e.getEntrada());
-				escalaMap.put("saida", e.getSaida());
-				escalaMap.put("realizada", e.getRealizada());
-				escalasConvertidasMap.add(escalaMap);
-			});
+
+			List<Map<String, Object>> escalasConvertidasMap = toListMap(escalasGeradas);
 
 			escalasDoColaboradorMap.put("escalas", escalasConvertidasMap);
 
 		}
-		
+
 		return escalasDoColaboradorMap;
-		
+
+	}
+	
+	private List<Map<String, Object>> toListMap(List<Escala> escalasGeradas){
+
+		List<Map<String, Object>> escalasConvertidasMap = new ArrayList<>();
+
+		escalasGeradas.forEach(e -> {
+
+			Map<String, Object> escalaMap = new HashMap<>();
+			escalaMap.put("data", e.getData());
+			escalaMap.put("entrada", e.getEntrada());
+			escalaMap.put("saida", e.getSaida());
+			escalaMap.put("realizada", e.getRealizada());
+			escalaMap.put("justificada", e.getJustificada());
+
+			if (e.isJustificada()) {
+				escalaMap.put("justicativa", e.getJustificativa());
+			}
+
+			escalasConvertidasMap.add(escalaMap);
+
+		});
+
+		return escalasConvertidasMap;
+
 	}
 	
 }

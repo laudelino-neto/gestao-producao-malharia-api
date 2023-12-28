@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.common.base.Preconditions;
 
+import br.com.gestaoproducaomalharia.dto.RelatorioDeEscalas;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Colaborador;
 import br.com.gestaoproducaomalharia.entity.Escala;
@@ -164,7 +165,7 @@ public class EscalaServiceImpl implements EscalaService{
 		escalas.add(escalaInicial);
 		
 		//Para cada dia entre as datas será gerada uma escala
-		for (long dia = 1; dia <= dias; dia++) {			
+		for (long dia = 1; dia <= dias; dia++) {
 			LocalDate dataDaEscala = dataInicial.plusDays(dia);
 			resultadoDaBusca = escalasRepository.buscarPor(colaborador, dataDaEscala);
 			Escala escala = null;
@@ -187,6 +188,66 @@ public class EscalaServiceImpl implements EscalaService{
 	public List<Escala> listarPor(Integer idDoColaborador, Integer ano, Integer mes){
 		Colaborador colaboradorSalvo = buscarColaboradorPor(idDoColaborador);
 		return escalasRepository.listarPor(colaboradorSalvo, ano, mes);		
+	}
+	
+	@Override
+	public RelatorioDeEscalas gerarPor(Integer idDoColaborador, Integer ano, Integer mes){
+		Colaborador colaboradorSalvo = buscarColaboradorPor(idDoColaborador);
+		
+		List<Escala> escalas = escalasRepository.listarPor(colaboradorSalvo, ano, mes);
+		
+		RelatorioDeEscalas relatorio = new RelatorioDeEscalas();		
+		relatorio.setColaborador(colaboradorSalvo);
+		relatorio.setAno(ano);
+		relatorio.setMes(mes);
+		relatorio.setEscalas(escalas);
+		relatorio.getResumo().setQtdeDeGeradas(escalas.size());
+				
+		Integer qtdeDeRealizadas = 0;
+		Integer qtdeParaRealizar = 0;
+		Integer qtdeDeFaltas = 0;
+		Integer qtdeDeJustificadas = 0;
+		Integer qtdeDeHoraExtra = 0;
+		Integer qtdeDeAtrasos = 0;
+		Integer saldoDeMinutos = 0;
+
+		for (Escala escala : escalas) {
+
+			AcertoDeEscala acerto = acertosRepository.buscarPor(
+					idDoColaborador, escala.getData());
+
+			escala.setAcerto(acerto);
+
+			if (escala.isJaRealizada()) {
+				qtdeDeRealizadas++;
+			}else if (escala.isFaltante()) {
+				qtdeDeFaltas++;
+			}
+
+			if (escala.isJustificada()) {
+				qtdeDeJustificadas++;
+			}
+
+			if (escala.isAcertoRealizado()) {
+
+				if (escala.getAcerto().isDeHoraExtra()) {
+					qtdeDeHoraExtra++;
+					saldoDeMinutos += escala.getAcerto().getTempo();
+				}else if (escala.getAcerto().isPorAtraso()) {
+					qtdeDeAtrasos++;
+					saldoDeMinutos -= escala.getAcerto().getTempo();
+				}
+
+			}
+
+		}
+
+		qtdeParaRealizar = qtdeDeRealizadas - relatorio.getResumo().getQtdeDeGeradas(); 
+		relatorio.getResumo().setQtdeParaRealizar(qtdeParaRealizar);
+		relatorio.getResumo().setSaldoDeMinutos(saldoDeMinutos);
+		
+		return relatorio;
+
 	}
 
 }

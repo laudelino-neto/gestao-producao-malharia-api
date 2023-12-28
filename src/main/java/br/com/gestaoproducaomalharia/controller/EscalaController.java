@@ -22,6 +22,7 @@ import com.google.common.base.Preconditions;
 import br.com.gestaoproducaomalharia.controller.converter.EscalaConverter;
 import br.com.gestaoproducaomalharia.controller.converter.MapConverter;
 import br.com.gestaoproducaomalharia.dto.ParametrosDeGeracao;
+import br.com.gestaoproducaomalharia.dto.RelatorioDeEscalas;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
 import br.com.gestaoproducaomalharia.entity.Escala;
 import br.com.gestaoproducaomalharia.entity.enums.Confirmacao;
@@ -147,6 +148,18 @@ public class EscalaController {
 		
 		return ResponseEntity.ok(escalaConverter.toMap(escalasGeradas));
 		
+	}
+	
+	@GetMapping("/colaborador/{id-colaborador}/ano/{ano}/mes/{mes}/relatorio")
+	public ResponseEntity<?> gerarPor(
+			@PathVariable("id-colaborador")
+			Integer idDoColaborador,
+			@PathVariable("ano")
+			Integer ano,
+			@PathVariable("mes")
+			Integer mes){
+		RelatorioDeEscalas relatorio = service.gerarPor(idDoColaborador, ano, mes);
+		return ResponseEntity.ok(escalaConverter.toMap(relatorio));
 	}
 	
 	@GetMapping("/colaborador/{id-colaborador}")

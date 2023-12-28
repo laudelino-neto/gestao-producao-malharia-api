@@ -66,6 +66,21 @@ public class AcertoDeEscala implements Validavel {
 	}
 	
 	@Transient
+	public boolean isDeHoraExtra() {
+		return getTipo() == TipoDeAcerto.HORA_EXTRA;
+	}
+	
+	@Transient
+	public boolean isPorAtraso() {
+		return getTipo() == TipoDeAcerto.ATRASO;
+	}
+	
+	@Transient
+	public boolean isDeCompensacao() {
+		return getTipo() == TipoDeAcerto.COMPENSACAO;
+	}
+	
+	@Transient
 	public boolean isDiaPresenteOuFuturo() {
 		LocalDate hoje = LocalDate.now();
 		return getDia().equals(hoje) || getDia().isAfter(hoje);

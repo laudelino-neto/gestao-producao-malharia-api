@@ -56,8 +56,20 @@ public class Escala implements Validavel{
 	@Column(name = "fl_realizada")
 	private Confirmacao realizada;
 	
+	@Enumerated(value = EnumType.STRING)
+	@NotNull(message = "O indicador 'Justificada' é obrigatório")
+	@Column(name = "fl_justificada")
+	private Confirmacao justificada;
+	
+	@Column(name = "justificativa")
+	private String justificativa;
+	
+	@Transient
+	private AcertoDeEscala acerto;
+	
 	public Escala() {
 		this.realizada = Confirmacao.S;
+		this.justificada = Confirmacao.N;
 	}
 
 	public Escala(Colaborador colaborador, LocalDate data, 
@@ -74,5 +86,31 @@ public class Escala implements Validavel{
 	public boolean isPersistido() {
 		return getId() != null && getId() > 0;
 	}
+	
+	@Transient
+	public boolean isJustificada() {
+		return getJustificada() == Confirmacao.S; 
+	}
+	
+	@Transient
+	public boolean isJaRealizada() {		
+		//A escala só é realizada de fato quando ela está confirmada e a data é posterior a data atual
+		return getData().isBefore(LocalDate.now()) && getRealizada() == Confirmacao.S; 
+	}
+		
+	@Transient
+	public boolean isParaRealizar() {
+		return !isJaRealizada();
+	}
+	
+	@Transient
+	public boolean isAcertoRealizado() {
+		return getAcerto() != null;
+	}
+	
+	@Transient
+	public boolean isFaltante() {
+		return isAcertoRealizado() && getAcerto().isPorFalta();
+	}	
 	
 }
