@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 
 import br.com.gestaoproducaomalharia.dto.RelatorioDeEscalas;
 import br.com.gestaoproducaomalharia.entity.AcertoDeEscala;
@@ -40,16 +41,21 @@ public class EscalaServiceImpl implements EscalaService{
 	    
 		LocalDate dia = acerto.getDia();
 	    
-	    Optional<Escala> escalaExistente = escalasRepository.buscarPor(
+	    Optional<Escala> resultadoEncontrado = escalasRepository.buscarPor(
 	    		acerto.getColaborador(), dia);
 	    
-	    Preconditions.checkArgument(escalaExistente.isPresent(), 
+	    Preconditions.checkArgument(resultadoEncontrado.isPresent(), 
 	    		"Não existe escala realizada para a data do acerto");	    	   
 	    
+	    Escala escalaEncontrada = resultadoEncontrado.get();
+	    
+	    Preconditions.checkArgument(!escalaEncontrada.isJaJustificada(), 
+	    		"Não é possível lançar acerto para escalas justificadas");
+	    
 		Preconditions.checkArgument(acerto.isDiaPresenteOuFuturo(), 
-					"A data do acerto não pode ser posterior à data atual");
+				"A data do acerto não pode ser posterior à data atual");
 		
-		if (acerto.isPorFalta()) {		
+		if (acerto.isPorFalta()) {
 			Preconditions.checkArgument(acerto.getTempo() == null, 
 					"O acerto por falta não deve possuir tempo informado");
 		}
@@ -94,6 +100,15 @@ public class EscalaServiceImpl implements EscalaService{
 			Escala outraEscala = resultadoDaBusca.get();
 			Preconditions.checkArgument(outraEscala.equals(escala), 
 					"A escala possui a mesma data da escala com o id '" + outraEscala.getId() + "'");
+		}
+		
+		if (escala.isJaJustificada()) {
+			Preconditions.checkArgument(!Strings.isNullOrEmpty(escala.getJustificativa()), 
+					"A justificativa é obrigatória");
+			escala.setRealizada(Confirmacao.N);
+		}else {
+			escala.setRealizada(Confirmacao.S);
+			escala.setJustificativa(null);
 		}
 		
 		this.escalasRepository.save(escala);
@@ -200,8 +215,7 @@ public class EscalaServiceImpl implements EscalaService{
 		relatorio.setColaborador(colaboradorSalvo);
 		relatorio.setAno(ano);
 		relatorio.setMes(mes);
-		relatorio.setEscalas(escalas);
-		relatorio.getResumo().setQtdeDeGeradas(escalas.size());
+		relatorio.setEscalas(escalas);		
 				
 		Integer qtdeDeRealizadas = 0;
 		Integer qtdeParaRealizar = 0;
@@ -224,7 +238,7 @@ public class EscalaServiceImpl implements EscalaService{
 				qtdeDeFaltas++;
 			}
 
-			if (escala.isJustificada()) {
+			if (escala.isJaJustificada()) {
 				qtdeDeJustificadas++;
 			}
 
@@ -242,8 +256,14 @@ public class EscalaServiceImpl implements EscalaService{
 
 		}
 
-		qtdeParaRealizar = qtdeDeRealizadas - relatorio.getResumo().getQtdeDeGeradas(); 
-		relatorio.getResumo().setQtdeParaRealizar(qtdeParaRealizar);
+		qtdeParaRealizar = escalas.size() - qtdeDeRealizadas;		
+		relatorio.getResumo().setQtdeParaRealizar(qtdeParaRealizar);		
+		relatorio.getResumo().setQtdeDeRealizadas(qtdeDeRealizadas);
+		relatorio.getResumo().setQtdeDeGeradas(escalas.size());
+		relatorio.getResumo().setQtdeDeFaltas(qtdeDeFaltas);
+		relatorio.getResumo().setQtdeDeJustificadas(qtdeDeJustificadas);
+		relatorio.getResumo().setQtdeDeHoraExtra(qtdeDeHoraExtra);
+		relatorio.getResumo().setQtdeDeAtrasos(qtdeDeAtrasos);
 		relatorio.getResumo().setSaldoDeMinutos(saldoDeMinutos);
 		
 		return relatorio;

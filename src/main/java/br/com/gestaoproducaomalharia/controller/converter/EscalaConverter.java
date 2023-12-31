@@ -69,13 +69,14 @@ public class EscalaConverter {
 		escalasGeradas.forEach(e -> {
 
 			Map<String, Object> escalaMap = new HashMap<>();
+			escalaMap.put("id", e.getId());
 			escalaMap.put("data", e.getData());
 			escalaMap.put("entrada", e.getEntrada());
 			escalaMap.put("saida", e.getSaida());
 			escalaMap.put("realizada", e.getRealizada());
 			escalaMap.put("justificada", e.getJustificada());
 
-			if (e.isJustificada()) {
+			if (e.isJaJustificada()) {
 				escalaMap.put("justicativa", e.getJustificativa());
 			}
 

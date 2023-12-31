@@ -88,7 +88,7 @@ public class Escala implements Validavel{
 	}
 	
 	@Transient
-	public boolean isJustificada() {
+	public boolean isJaJustificada() {
 		return getJustificada() == Confirmacao.S; 
 	}
 	
@@ -100,7 +100,7 @@ public class Escala implements Validavel{
 		
 	@Transient
 	public boolean isParaRealizar() {
-		return !isJaRealizada();
+		return getData().isAfter(LocalDate.now()) && getRealizada() == Confirmacao.S;
 	}
 	
 	@Transient
