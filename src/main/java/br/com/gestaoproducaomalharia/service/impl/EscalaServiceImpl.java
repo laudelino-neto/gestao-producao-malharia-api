@@ -244,8 +244,10 @@ public class EscalaServiceImpl implements EscalaService{
 
 			if (escala.isAcertoRealizado()) {
 
-				if (escala.getAcerto().isDeHoraExtra()) {
-					qtdeDeHoraExtra++;
+				if (escala.getAcerto().isDeHoraExtra() || escala.getAcerto().isDeCompensacao()) {
+					if (escala.getAcerto().isDeHoraExtra()) {
+						qtdeDeHoraExtra++;
+					}
 					saldoDeMinutos += escala.getAcerto().getTempo();
 				}else if (escala.getAcerto().isPorAtraso()) {
 					qtdeDeAtrasos++;

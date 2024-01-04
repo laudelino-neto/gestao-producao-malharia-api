@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.com.gestaoproducaomalharia.dto.RelatorioDeEscalas;
@@ -14,6 +15,9 @@ import jakarta.validation.constraints.NotNull;
 
 @Component
 public class EscalaConverter {
+	
+	@Autowired
+	private MapConverter mapConverter;
 	
 	public Map<String, Object> toMap(RelatorioDeEscalas relatorio){			
 
@@ -78,6 +82,12 @@ public class EscalaConverter {
 
 			if (e.isJaJustificada()) {
 				escalaMap.put("justicativa", e.getJustificativa());
+			}
+			
+			if (e.isAcertoRealizado()) {
+				//Desvincula o colaborador do acerto da escala
+				//e.getAcerto().setColaborador(null);
+				escalaMap.put("acerto", mapConverter.toJsonMap(e.getAcerto(), "colaborador"));
 			}
 
 			escalasConvertidasMap.add(escalaMap);

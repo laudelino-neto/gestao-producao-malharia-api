@@ -42,7 +42,8 @@ public class AcertoDeEscala implements Validavel {
 	@JoinColumn(name = "id_colaborador")
 	@NotNull(message = "O colaborador é obrigatório")
 	private Colaborador colaborador;
-		
+	
+	@Column(name = "tempo")
 	private Integer tempo;
 	
 	@Enumerated(value = EnumType.STRING)
