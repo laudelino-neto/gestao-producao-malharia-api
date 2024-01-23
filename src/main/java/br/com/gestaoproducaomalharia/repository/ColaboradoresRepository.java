@@ -13,14 +13,25 @@ import br.com.gestaoproducaomalharia.entity.enums.Status;
 @Repository
 public interface ColaboradoresRepository extends JpaRepository<Colaborador, Integer> {
 	
-	@Query(value = "SELECT c FROM Colaborador c WHERE Upper(c.nomeCompleto) LIKE Upper(:nomeCompleto) ORDER BY c.nomeCompleto ", 
-			countQuery = "SELECT Count(c) FROM Colaborador c WHERE Upper(c.nomeCompleto) LIKE Upper(:nomeCompleto)")
+	@Query(value = 
+			"SELECT c "
+			+ "FROM Colaborador c "
+			+ "WHERE Upper(c.nomeCompleto) LIKE Upper(:nomeCompleto) "
+			+ "ORDER BY c.nomeCompleto ", 
+			countQuery = 
+				"SELECT Count(c) "
+				+ "FROM Colaborador c "
+				+ "WHERE Upper(c.nomeCompleto) LIKE Upper(:nomeCompleto) ")
 	public Page<Colaborador> listarPor(String nomeCompleto, Pageable paginacao);
 	
-	@Query(value = "SELECT c FROM Colaborador c WHERE c.id = :id")
+	@Query(value = 
+			"SELECT c "
+			+ "FROM Colaborador c "
+			+ "WHERE c.id = :id")
 	public Colaborador buscarPor(Integer id);
 	
-	@Query(value = "SELECT c " 
+	@Query(value = 
+			"SELECT c " 
 			+ "FROM Colaborador c " 
 			+ "WHERE Upper(c.nomeCompleto) = Upper(:nomeCompleto)")
 	public Colaborador buscarPor(String nomeCompleto);

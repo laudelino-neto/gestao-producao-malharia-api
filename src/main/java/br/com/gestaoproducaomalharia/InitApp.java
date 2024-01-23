@@ -11,12 +11,12 @@ public class InitApp {
 
 	public static void main(String[] args) {
 		SpringApplication.run(InitApp.class, args);
-	}		
-
+	}			
+	
 	@Bean
 	public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
 		return args -> {
-			System.err.println("subiu");
+			
 		};
 	}
 

@@ -171,7 +171,7 @@ public class HandlerErrorDefault {
 		return errorConverter.criarMapDeErro(ErroDaApi.INTEGRACAO_INVALIDA, 
 				"Ocorreu um erro de integração com a Api externa");
 	}	
-	
+
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(DataIntegrityViolationException.class)
 	public Map<String, Object> handlePSQLExceptions(
