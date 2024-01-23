@@ -60,7 +60,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 	public void atualizarStatusPor(Integer id, Status status) {
 		Colaborador colaboradorEncontrado = repository.buscarPor(id);
 		Preconditions.checkNotNull(colaboradorEncontrado,
-				"Não existe colaborador vinculada ao id informado.");
+				"Não existe colaborador vinculado ao id informado.");
 		Preconditions.checkArgument(colaboradorEncontrado.getStatus() != status,
 				"O status já está salvo para o colaborador.");
 		this.repository.atualizarStatusPor(id, status);

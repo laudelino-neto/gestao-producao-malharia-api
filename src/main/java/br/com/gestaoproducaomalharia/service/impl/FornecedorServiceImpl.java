@@ -35,8 +35,10 @@ public class FornecedorServiceImpl implements FornecedorService {
 	@Override
 	public Fornecedor buscarPor(Integer id) {
 		Fornecedor fornecedorEncontrado = repository.buscarPor(id);
-		Preconditions.checkNotNull(fornecedorEncontrado, "Não foi encontrado fornecedor para o id informado");
-		Preconditions.checkArgument(fornecedorEncontrado.isAtivo(), "O fornecedor está inativo.");
+		Preconditions.checkNotNull(fornecedorEncontrado, 
+				"Não foi encontrado fornecedor para o id informado");
+		Preconditions.checkArgument(fornecedorEncontrado.isAtivo(), 
+				"O fornecedor está inativo.");
 		return fornecedorEncontrado;
 	}
 

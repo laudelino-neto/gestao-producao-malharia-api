@@ -13,11 +13,16 @@ import br.com.gestaoproducaomalharia.entity.enums.Status;
 @Repository
 public interface TamanhosRepository extends JpaRepository<Tamanho, Integer>{
 	
-	@Query(value = "SELECT t FROM Tamanho t ORDER BY t.sigla", 
-			countQuery = "SELECT Count(t) FROM Tamanho t")
+	@Query(value = "SELECT t "
+			+ "FROM Tamanho t "
+			+ "ORDER BY t.sigla", 
+			countQuery = "SELECT Count(t) "
+					+ "FROM Tamanho t")
 	public Page<Tamanho> listarPor(Pageable paginacao);
 
-	@Query(value = "SELECT t FROM Tamanho t WHERE t.id = :id")
+	@Query(value = "SELECT t "
+			+ "FROM Tamanho t "
+			+ "WHERE t.id = :id")
 	public Tamanho buscarPor(Integer id);
 	
 	@Query(value = "SELECT t " 
@@ -26,7 +31,9 @@ public interface TamanhosRepository extends JpaRepository<Tamanho, Integer>{
 	public Tamanho buscarPor(String sigla);
 	
 	@Modifying
-	@Query(value = "UPDATE Tamanho t SET t.status = :status WHERE t.id = :id")
+	@Query(value = "UPDATE Tamanho t "
+			+ "SET t.status = :status "
+			+ "WHERE t.id = :id")
 	public void atualizarStatusPor(Integer id, Status status);
 
 }
