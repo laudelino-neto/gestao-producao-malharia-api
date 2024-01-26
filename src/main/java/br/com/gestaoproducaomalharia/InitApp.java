@@ -6,8 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-import com.fasterxml.jackson.datatype.hibernate5.jakarta.Hibernate5JakartaModule;
-
 @SpringBootApplication
 public class InitApp {
 
@@ -21,10 +19,5 @@ public class InitApp {
 			
 		};
 	}
-	
-	@Bean
-    public Hibernate5JakartaModule jsonHibernate5Module() {
-        return new Hibernate5JakartaModule();
-    }
 
 }
